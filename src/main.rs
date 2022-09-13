@@ -7,6 +7,7 @@ type F = GoldilocksField;
 type C = PoseidonGoldilocksConfig;
 
 fn main() {
+    use std::time::Instant;
     // 2 * (a^2 + b*c) = d
     // a = 10, b = 5, c = 3, d = 230
     let config = CircuitConfig::standard_recursion_config();
@@ -35,7 +36,10 @@ fn main() {
     pw.set_target(d_t, GoldilocksField(230));
 
     // prove
+    let now = Instant::now();
     let proof = data.prove(pw).unwrap();
+    let elapsed = now.elapsed();
+    println!("Elapsed: {:.2?}", elapsed);
     match data.verify(proof) {
         Ok(()) => println!("Proof succeed!"),
         Err(x) => println!("Error with {}", x)
